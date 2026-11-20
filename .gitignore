@@ -1,0 +1,17 @@
+# .NET / Visual Studio / VS Code build outputs
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+
+# SQL Server binary files and backups (never commit these)
+*.mdf
+*.ldf
+*.ndf
+*.bak
+
+# OS junk files
+.DS_Store
+Thumbs.db

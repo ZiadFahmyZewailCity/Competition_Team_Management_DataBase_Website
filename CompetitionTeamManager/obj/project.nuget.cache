@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "VJRsLbrx0do=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Ziad\\Desktop\\Academic\\College zewail city\\Courses\\CIE\\Year 2\\CIE 206 Database\\Project\\Competition_Team_Management_DataBase_Website\\CompetitionTeamManager\\CompetitionTeamManager.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.21\\microsoft.bcl.cryptography.9.0.21.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.data.sqlclient\\7.1.2\\microsoft.data.sqlclient.7.1.2.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.data.sqlclient.extensions.abstractions\\7.1.2\\microsoft.data.sqlclient.extensions.abstractions.7.1.2.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.data.sqlclient.internal.logging\\7.1.2\\microsoft.data.sqlclient.internal.logging.7.1.2.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\7.1.2\\microsoft.data.sqlclient.sni.runtime.7.1.2.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.16.0\\microsoft.identitymodel.abstractions.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.16.0\\microsoft.identitymodel.jsonwebtokens.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.logging\\8.16.0\\microsoft.identitymodel.logging.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.protocols\\8.16.0\\microsoft.identitymodel.protocols.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\8.16.0\\microsoft.identitymodel.protocols.openidconnect.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.16.0\\microsoft.identitymodel.tokens.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\system.configuration.configurationmanager\\9.0.21\\system.configuration.configurationmanager.9.0.21.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.16.0\\system.identitymodel.tokens.jwt.8.16.0.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\system.security.cryptography.pkcs\\9.0.21\\system.security.cryptography.pkcs.9.0.21.nupkg.sha512",
+    "C:\\Users\\Ziad\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.21\\system.security.cryptography.protecteddata.9.0.21.nupkg.sha512"
+  ],
+  "logs": []
+}
