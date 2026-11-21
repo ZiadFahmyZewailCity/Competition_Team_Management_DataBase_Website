@@ -1,0 +1,82 @@
+
+-- SPONSOR 
+
+CREATE TABLE [SPONSOR]
+(
+    Sponsor_ID INT PRIMARY KEY,
+    Sponsor_Name VARCHAR(50),
+    Sponsor_Type VARCHAR(50),
+    Sponsor_Logo VARCHAR(300),
+    Contribution_Details VARCHAR(500),
+    Email VARCHAR(50),
+    Phone VARCHAR(50),
+    Sponsor_Description VARCHAR(500),
+    Team_ID INT,
+
+    FOREIGN KEY (Team_ID)
+    REFERENCES [TEAM](Team_ID)
+);
+
+
+-- ACHIEVEMENT
+
+CREATE TABLE [ACHIEVEMENT]
+(
+    Achievement_ID INT PRIMARY KEY,
+    Title VARCHAR(100),
+    Category VARCHAR(50),
+    [Rank] VARCHAR(50),
+    Description VARCHAR(500),
+    Achievement_Date_Day INT,
+    Achievement_Date_Month INT,
+    Achievement_Date_Year INT,
+    IsVisible BIT,
+    Team_ID INT,
+
+    FOREIGN KEY (Team_ID)
+    REFERENCES [TEAM](Team_ID)
+);
+
+
+-- ASSISTANCE_REQUEST 
+
+CREATE TABLE [ASSISTANCE_REQUEST]
+(
+    Request_ID INT PRIMARY KEY,
+    Title VARCHAR(100),
+    Description VARCHAR(500),
+    Assistance_Request_Date_Day INT,
+    Assistance_Request_Date_Month INT,
+    Assistance_Request_Date_Year INT,
+    Status VARCHAR(50),
+    Response VARCHAR(500),
+    Response_Date_Day INT,
+    Response_Date_Month INT,
+    Response_Date_Year INT,
+    UserID INT,
+
+    FOREIGN KEY (UserID)
+    REFERENCES [MEMBER](UserID)
+);
+
+
+-- FEEDBACK 
+
+CREATE TABLE [FEEDBACK]
+(
+    Feedback_ID INT PRIMARY KEY,
+    Comment VARCHAR(500),
+    Rating INT,
+    Feedback_Date_Day INT,
+    Feedback_Date_Month INT,
+    Feedback_Date_Year INT,
+    UserID INT,
+    Username VARCHAR(50),
+
+    FOREIGN KEY (UserID)
+    REFERENCES [MEMBER](UserID)
+
+    FOREIGN KEY (Document_ID)
+    REFERENCES [DOCUMENT](Document_ID)
+
+);
