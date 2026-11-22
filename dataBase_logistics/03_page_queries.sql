@@ -61,16 +61,28 @@ WHERE L.Member_ID = @UserID;
 
 -- ============================================================
 -- PAGE 2: HOME & CONTACT
--- ============================================================
+-- Test inputs for PAGE 2
+DECLARE @Team_ID       INT           = 1;
+DECLARE @Team_Mission  VARCHAR(MAX)  = 'New mission text';
+DECLARE @Team_Vision   VARCHAR(MAX)  = 'New vision text';
+DECLARE @Address       VARCHAR(255)  = 'New address';
+DECLARE @Team_Email    VARCHAR(100)  = 'team@example.com';
+DECLARE @Team_Phone    VARCHAR(50)   = '01000000000';
+
 
 -- 2.1 SELECT: Load team mission, vision, and contact info (TEAM)
-
+SELECT Team_Name, Team_Mission, Team_Vision, Address, Email, Phone
+FROM [TEAM];
 
 
 -- 2.2 UPDATE: Edit team info (Admin)
-
-
-
+UPDATE [TEAM]
+SET Team_Mission = @Team_Mission,
+    Team_Vision  = @Team_Vision,
+    Address      = @Address,
+    Email        = @Team_Email,
+    Phone        = @Team_Phone
+WHERE Team_ID = @Team_ID;
 -- ============================================================
 -- PAGE 3: TEAM MEMBERS & SUB-TEAM MEMBERS
 -- ============================================================
@@ -95,21 +107,60 @@ WHERE L.Member_ID = @UserID;
 -- PAGE 4: SUBTEAMS
 -- ============================================================
 
--- 4.1 SELECT: Load all subteams, descriptions, and leads (SUBTEAM + LEADS_SUBTEAM)
+-- Test inputs for PAGE 4
+DECLARE @Subteam_ID           INT           = 1;
+DECLARE @Subteam_Name         VARCHAR(100)  = 'Software';
+DECLARE @Subteam_Description  VARCHAR(MAX)  = 'Responsible for the software of the robot';
+DECLARE @Team_ID              INT           = 1;
+DECLARE @Lead_Member_ID       INT           = 5;
+DECLARE @New_Lead_Member_ID   INT           = 6;
 
+-- 4.1 SELECT: Load all subteams, descriptions, and leads (SUBTEAM + LEADS_SUBTEAM)
+SELECT S.Subteam_ID, S.Subteam_Name, S.Subteam_Description,
+       U.UserID AS Lead_ID, U.First_Name, U.Last_Name
+FROM [SUBTEAM] S
+LEFT JOIN [LEADS_SUBTEAM] L
+    ON L.Subteam_ID = S.Subteam_ID
+LEFT JOIN [User] U
+    ON U.UserID = L.Member_ID
+ORDER BY S.Subteam_Name;
 
 
 -- 4.2 INSERT: Create a new subteam (SUBTEAM) and assign lead(s) (LEADS_SUBTEAM)
 
+-- Admin creates a subteam
+INSERT INTO [SUBTEAM] (Subteam_ID, Subteam_Name, Subteam_Description, Team_ID)
+VALUES (@Subteam_ID, @Subteam_Name, @Subteam_Description, @Team_ID);
+
+-- Assign a lead to the subteam
+INSERT INTO [LEADS_SUBTEAM] (Subteam_ID, Member_ID)
+VALUES (@Subteam_ID, @Lead_Member_ID);
 
 
 -- 4.3 UPDATE / DELETE: Edit subteam details or update/remove leads (SUBTEAM, LEADS_SUBTEAM)
 
+-- Edit subteam details
+UPDATE [SUBTEAM]
+SET Subteam_Name        = @Subteam_Name,
+    Subteam_Description = @Subteam_Description
+WHERE Subteam_ID = @Subteam_ID;
+
+-- Change the lead of the subteam
+UPDATE [LEADS_SUBTEAM]
+SET Member_ID = @New_Lead_Member_ID
+WHERE Subteam_ID = @Subteam_ID
+  AND Member_ID  = @Lead_Member_ID;
+
+-- Remove a lead from the subteam
+DELETE FROM [LEADS_SUBTEAM]
+WHERE Subteam_ID = @Subteam_ID
+  AND Member_ID  = @New_Lead_Member_ID;
 
 
 -- 4.4 DELETE: Delete a subteam (clean up junction rows first)
-
-
+DELETE FROM [LEADS_SUBTEAM]            WHERE Subteam_ID = @Subteam_ID;
+DELETE FROM [SUBTEAM_WORKS_ON_PROJECT] WHERE Subteam_ID = @Subteam_ID;
+DELETE FROM [SUBTEAM]                  WHERE Subteam_ID = @Subteam_ID;
 
 -- ============================================================
 -- PAGE 5: PROJECTS
