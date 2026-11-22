@@ -4,7 +4,6 @@ BEGIN TRANSACTION;
 USE compeition_team_manager;
 GO
 
-
 -- 1.1 SELECT: Verify active user credentials ([User])
 SELECT UserID, Username, First_Name, Last_Name, Password_
 FROM [User]
@@ -467,8 +466,6 @@ WHERE timeLine_ID = @timeLine_ID;
 UPDATE ACHIEVEMENT
 SET IsVisable = @IsVisible
 WHERE Achievement_ID = @Achievement_ID;
-<<<<<<< HEAD
 
 ROLLBACK TRANSACTION; 
-=======
->>>>>>> 42d6f8caa37b69212bcfefe4976ba08d787d073b
+
