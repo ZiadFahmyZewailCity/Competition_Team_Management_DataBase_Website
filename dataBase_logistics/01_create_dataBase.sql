@@ -140,15 +140,73 @@ CREATE TABLE [MESSAGE]
 );
 
 /* Feedback table */
+CREATE TABLE [FEEDBACK]
+(
+    Feedback_ID INT,
+    Comment VARCHAR(MAX),
+    Rating INT,
+    Day INT,
+    Month INT,
+    Year INT,
+
+    PRIMARY KEY (Feedback_ID)
+);
 
 
 /* Assistance_Request table */
+CREATE TABLE [ASSISTANCE_REQUEST]
+(
+    Request_ID INT,
+    Status VARCHAR(100),
+    Day INT,
+    Month INT,
+    Year INT,
+    Description VARCHAR(MAX),
+    Title VARCHAR(500),
+    Response VARCHAR(MAX),
+    Response_Date DATE,
 
+    PRIMARY KEY (Request_ID)
+);
 
 /* Achievement table */
+CREATE TABLE [ACHIEVEMENT]
+(
+    Achievement_ID INT,
+    Title VARCHAR(500),
+    Description VARCHAR(MAX),
+    Day INT,
+    Month INT,
+    Year INT,
+    Rank VARCHAR(100),
+    Placement_Rank VARCHAR(100),
+    Placement_Category VARCHAR(100),
+
+    PRIMARY KEY (Achievement_ID)
+);
 
 
 /* Sponsor table */
+
+CREATE TABLE [SPONSOR]
+(
+    Sponsor_ID INT,
+    Sponsor_Name VARCHAR(255),
+    Sponsor_Logo VARCHAR(500),
+    Sponsor_Type VARCHAR(100),
+    Email VARCHAR(255),
+    Phone VARCHAR(20),
+
+    PRIMARY KEY (Sponsor_ID)
+);
+CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
+(
+    Sponsor_ID INT,
+    Contract_Details VARCHAR(MAX),
+
+    PRIMARY KEY (Sponsor_ID, Contract_Details),
+    FOREIGN KEY (Sponsor_ID) REFERENCES [SPONSOR](Sponsor_ID)
+);
 
 
 /* Relational Tables TABLES */
@@ -156,7 +214,19 @@ CREATE TABLE [MESSAGE]
 /* SUBTEAM_WORKS_ON_PROJECT */
 
 /* BELONGS_TO */
+CREATE TABLE [PROJECT_DOCUMENT]
+(
+    Project_ID INT,
+    Document_ID INT,
 
+    PRIMARY KEY (Project_ID, Document_ID),
+
+    FOREIGN KEY (Project_ID)
+        REFERENCES [PROJECT](ProjectID),
+
+    FOREIGN KEY (Document_ID)
+        REFERENCES [DOCUMENT](DocumentID)
+);
 /* MEMBER_WORKS_ON_TASK */
 
 /* SPONSOR_CONTRIBUTION */
