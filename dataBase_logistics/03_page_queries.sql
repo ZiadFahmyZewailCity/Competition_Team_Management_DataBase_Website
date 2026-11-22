@@ -3,21 +3,64 @@
 USE compeition_team_manager;
 GO
 
--- ============================================================
--- PAGE 1: SIGN IN & ROLE CHECK
--- ============================================================
+-- Test inputs for SSMS (matched to VARCHAR(50) in [User])
+DECLARE @Username VARCHAR(50) = 'Guardiansof_Galaxy';
+DECLARE @Password VARCHAR(50) = 'myPassword123';
+DECLARE @UserID   INT         = 1;
 
--- 1.1 SELECT: Verify active user credentials ([USER])
-
-SELECT UserID, Username, First_Name, Last_Name, Email
+-- 1.1 SELECT: Verify active user credentials ([User])
+SELECT UserID, Username, First_Name, Last_Name, Password_
 FROM [User]
-WHERE Username = 'ziad123'
-  AND Password_ = 'pass123'
-  AND IsActive = 1;
+WHERE Username  = @Username
+  AND Password_ = @Password
+  AND IsActive  = 1;
 
+-- 1.2 SELECT: Check user role (Admin, Subteam Lead, or Member)
+SELECT
+    U.UserID,
+    CASE
+        WHEN A.UserID IS NOT NULL THEN 'Admin'
+        WHEN EXISTS (
+            SELECT 1
+            FROM LEADS_SUBTEAM L
+            WHERE L.Member_ID = U.UserID
+        ) THEN 'Subteam Lead'
+        WHEN M.UserID IS NOT NULL THEN 'Member'
+        ELSE 'Unknown'
+    END AS UserRole
+FROM [User] U
+LEFT JOIN [ADMIN]  A ON U.UserID = A.UserID
+LEFT JOIN [MEMBER] M ON U.UserID = M.UserID
+WHERE U.UserID = @UserID;
 
--- 1.2 SELECT: Check user role (ADMIN, MEMBER, or Subteam Lead via LEADS_SUBTEAM)
+-- 1.3 SELECT: Combined Login + Role Check (Single Query)
+SELECT
+    U.UserID,
+    U.Username,
+    U.First_Name,
+    U.Last_Name,
+    CASE
+        WHEN A.UserID IS NOT NULL THEN 'Admin'
+        WHEN EXISTS (
+            SELECT 1
+            FROM LEADS_SUBTEAM L
+            WHERE L.Member_ID = U.UserID
+        ) THEN 'Subteam Lead'
+        WHEN M.UserID IS NOT NULL THEN 'Member'
+        ELSE 'Unknown'
+    END AS UserRole
+FROM [User] U
+LEFT JOIN [ADMIN]  A ON U.UserID = A.UserID
+LEFT JOIN [MEMBER] M ON U.UserID = M.UserID
+WHERE U.Username  = @Username
+  AND U.Password_ = @Password
+  AND U.IsActive  = 1;
 
+-- 1.4 SELECT: Get Subteam(s) Led (If UserRole = 'Subteam Lead')
+SELECT S.Subteam_ID, S.Subteam_Name
+FROM LEADS_SUBTEAM L
+JOIN SUBTEAM S ON L.Subteam_ID = S.Subteam_ID
+WHERE L.Member_ID = @UserID;
 
 
 -- ============================================================
@@ -26,18 +69,10 @@ WHERE Username = 'ziad123'
 
 -- 2.1 SELECT: Load team mission, vision, and contact info (TEAM)
 
-SELECT Team_Name, Team_Mission, Team_Vision, Address, Email, Phone
-FROM [TEAM];
 
 
 -- 2.2 UPDATE: Edit team info (Admin)
-UPDATE [TEAM]
-SET Team_Mission = 'New mission text',
-    Team_Vision  = 'New vision text',
-    Address      = 'New address',
-    Email        = 'team@example.com',
-    Phone        = '01000000000'
-WHERE Team_ID = 1;
+
 
 
 -- ============================================================
@@ -195,63 +230,21 @@ WHERE Team_ID = 1;
 -- 8.1 SELECT: Load public achievements (ACHIEVEMENT)
 
 
-SELECT Achievement_ID, Title, Description,
-       Day, Month, Year,
-       Rank, Placement_Rank, Placement_Category
-FROM [ACHIEVEMENT]
-ORDER BY Year DESC, Month DESC, Day DESC;
 
 -- 8.2 INSERT / UPDATE / DELETE: Manage achievements (Admin)
-INSERT INTO [ACHIEVEMENT]
-    (Achievement_ID, Title, Description, Day, Month, Year, Rank, Placement_Rank, Placement_Category)
-VALUES
-    (1, 'ACM Regional Contest', 'Won first place in the regional contest', 15, 3, 2026, 'Gold', '1st', 'Programming');
 
 
 
 -- 8.3 SELECT: Load sponsors and contribution details (SPONSOR + SPONSOR_CONTRIBUTION if used)
-SELECT S.Sponsor_ID, S.Sponsor_Name, S.Sponsor_Logo, S.Sponsor_Type,
-       S.Email, S.Phone,
-       C.Contract_Details
-FROM [SPONSOR] S
-LEFT JOIN [SPONSOR_CONTRACT_DETAILS] C
-    ON C.Sponsor_ID = S.Sponsor_ID
-ORDER BY S.Sponsor_Name;
+
 
 
 -- 8.4 INSERT / UPDATE / DELETE: Manage sponsors & contributions (Admin)
 
-INSERT INTO [SPONSOR]
-    (Sponsor_ID, Sponsor_Name, Sponsor_Logo, Sponsor_Type, Email, Phone)
-VALUES
-    (1, 'TechCorp', 'logos/techcorp.png', 'Gold', 'info@techcorp.com', '01000000000');
-INSERT INTO [SPONSOR_CONTRACT_DETAILS] (Sponsor_ID, Contract_Details)
-VALUES (1, 'Provides 50,000 EGP yearly funding');
-UPDATE [SPONSOR]
-SET Sponsor_Name = 'TechCorp Egypt',
-    Sponsor_Type = 'Platinum',
-    Phone = '01111111111'
-WHERE Sponsor_ID = 1;
--- UPDATE contract detail (it is part of the PK, so we match on the old value)
-UPDATE [SPONSOR_CONTRACT_DETAILS]
-SET Contract_Details = 'Provides 75,000 EGP yearly funding'
-WHERE Sponsor_ID = 1
-  AND Contract_Details = 'Provides 50,000 EGP yearly funding';
-DELETE FROM [SPONSOR_CONTRACT_DETAILS]
-WHERE Sponsor_ID = 1
-  AND Contract_Details = 'Provides 75,000 EGP yearly funding';
-DELETE FROM [SPONSOR_CONTRACT_DETAILS] WHERE Sponsor_ID = 1;
-DELETE FROM [SPONSOR] WHERE Sponsor_ID = 1;
-
-
 
 
 -- 8.5 SELECT: Load gallery photos (DOCUMENT where Document_Type = 'Gallery')
-SELECT Document_ID, Document_Filename, Document_FilePath, Document_Fileformat,
-       D_Upload_Date_Day, D_Upload_Date_Month, D_Upload_Date_Year
-FROM [DOCUMENT]
-WHERE Document_Type = 'Gallery'
-ORDER BY D_Upload_Date_Year DESC, D_Upload_Date_Month DESC, D_Upload_Date_Day DESC;
+
 
 
 -- ============================================================

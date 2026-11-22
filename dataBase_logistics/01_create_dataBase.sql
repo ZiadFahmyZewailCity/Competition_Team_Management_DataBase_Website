@@ -199,9 +199,7 @@ CREATE TABLE [FEEDBACK]
     Feedback_ID INT,
     Comment VARCHAR(MAX),
     Rating INT,
-    Day INT,
-    Month INT,
-    Year INT,
+    feedback_date DATE,
 
     PRIMARY KEY (Feedback_ID)
 );
@@ -212,9 +210,7 @@ CREATE TABLE [ASSISTANCE_REQUEST]
 (
     Request_ID INT,
     Status VARCHAR(100),
-    Day INT,
-    Month INT,
-    Year INT,
+    feedback_date DATE,
     Description VARCHAR(MAX),
     Title VARCHAR(500),
     Response VARCHAR(MAX),
@@ -229,9 +225,7 @@ CREATE TABLE [ACHIEVEMENT]
     Achievement_ID INT,
     Title VARCHAR(500),
     Description VARCHAR(MAX),
-    Day INT,
-    Month INT,
-    Year INT,
+    feedback_date DATE,
     Rank VARCHAR(100),
     Placement_Rank VARCHAR(100),
     Placement_Category VARCHAR(100),
@@ -253,6 +247,7 @@ CREATE TABLE [SPONSOR]
 
     PRIMARY KEY (Sponsor_ID)
 );
+
 CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
 (
     Sponsor_ID INT,
@@ -281,6 +276,7 @@ CREATE TABLE [PROJECT_DOCUMENT]
     FOREIGN KEY (Document_ID)
         REFERENCES [DOCUMENT](DocumentID)
 );
+
 /* MEMBER_WORKS_ON_TASK */
 
 /* SPONSOR_CONTRIBUTION */
