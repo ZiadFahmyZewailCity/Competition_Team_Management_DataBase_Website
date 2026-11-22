@@ -1,9 +1,8 @@
+BEGIN TRANSACTION;
 
 -- SQL for using correct database
 USE compeition_team_manager;
 GO
-
-
 
 
 -- 1.1 SELECT: Verify active user credentials ([User])
@@ -363,3 +362,5 @@ WHERE timeLine_ID = @timeLine_ID;
 UPDATE ACHIEVEMENT
 SET IsVisable = @IsVisible
 WHERE Achievement_ID = @Achievement_ID;
+
+ROLLBACK TRANSACTION; 
