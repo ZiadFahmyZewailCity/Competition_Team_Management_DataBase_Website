@@ -199,7 +199,11 @@ CREATE TABLE [FEEDBACK]
     Feedback_ID INT,
     Comment VARCHAR(MAX),
     Rating INT,
+<<<<<<< HEAD
     feedback_date DATE,
+=======
+    Feedback_date Date ,
+>>>>>>> c311c7f855c350bd74992eafb401a835aa7eeae9
     UserID INT,
     Document_ID INT,
 
@@ -213,6 +217,12 @@ CREATE TABLE [ASSISTANCE_REQUEST]
 (
   
     Request_ID INT,
+<<<<<<< HEAD
+=======
+    Title VARCHAR(500),
+    Description VARCHAR(MAX),
+    Assistance_Request_date Date,
+>>>>>>> c311c7f855c350bd74992eafb401a835aa7eeae9
     Status VARCHAR(100),
     feedback_date DATE,
     Description VARCHAR(MAX),
@@ -228,12 +238,20 @@ CREATE TABLE [ACHIEVEMENT]
     Achievement_ID INT,
     Title VARCHAR(500),
     Description VARCHAR(MAX),
+<<<<<<< HEAD
     feedback_date DATE,
     Rank VARCHAR(100),
     Placement_Rank VARCHAR(100),
     Placement_Category VARCHAR(100),
 
     PRIMARY KEY (Achievement_ID)
+=======
+    Achievement_date DATE,
+    IsVisible BIT DEFAULT 1,
+    Team_ID INT,
+    PRIMARY KEY (Achievement_ID),
+    FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
+>>>>>>> c311c7f855c350bd74992eafb401a835aa7eeae9
 );
 
 
