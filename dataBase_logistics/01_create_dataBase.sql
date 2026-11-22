@@ -199,28 +199,32 @@ CREATE TABLE [FEEDBACK]
     Feedback_ID INT,
     Comment VARCHAR(MAX),
     Rating INT,
-    Day INT,
-    Month INT,
-    Year INT,
+    Feedback_Date_date INT,
+    UserID INT,
+    Document_ID INT,
 
-    PRIMARY KEY (Feedback_ID)
-);
-
+    PRIMARY KEY (Feedback_ID),
+    FOREIGN KEY (UserID)      REFERENCES [MEMBER](UserID),
+    FOREIGN KEY (Document_ID) REFERENCES [DOCUMENT](Document_ID)
 
 /* Assistance_Request table */
 CREATE TABLE [ASSISTANCE_REQUEST]
 (
+  
     Request_ID INT,
-    Status VARCHAR(100),
-    Day INT,
-    Month INT,
-    Year INT,
-    Description VARCHAR(MAX),
     Title VARCHAR(500),
+    Description VARCHAR(MAX),
+    Assistance_Request_Date_Date INT,
+    Status VARCHAR(100),
     Response VARCHAR(MAX),
-    Response_Date DATE,
+    Response_Date_date INT,
+  
+    UserID INT,
 
-    PRIMARY KEY (Request_ID)
+    PRIMARY KEY (Request_ID),
+    FOREIGN KEY (UserID) REFERENCES [MEMBER](UserID)
+);
+
 );
 
 /* Achievement table */
@@ -228,31 +232,31 @@ CREATE TABLE [ACHIEVEMENT]
 (
     Achievement_ID INT,
     Title VARCHAR(500),
+    Category VARCHAR(100),
+    Achievement_Rank VARCHAR(100),
     Description VARCHAR(MAX),
-    Day INT,
-    Month INT,
-    Year INT,
-    Rank VARCHAR(100),
-    Placement_Rank VARCHAR(100),
-    Placement_Category VARCHAR(100),
-
-    PRIMARY KEY (Achievement_ID)
+    Achievement_Date_date INT,
+    IsVisible BIT DEFAULT 1,
+    Team_ID INT,
+    PRIMARY KEY (Achievement_ID),
+    FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
 );
-
-
-/* Sponsor table */
 
 CREATE TABLE [SPONSOR]
 (
     Sponsor_ID INT,
     Sponsor_Name VARCHAR(255),
-    Sponsor_Logo VARCHAR(500),
     Sponsor_Type VARCHAR(100),
+    Sponsor_Logo VARCHAR(500),
     Email VARCHAR(255),
     Phone VARCHAR(20),
+    Sponsor_Description VARCHAR(MAX),
+    Team_ID INT,
 
-    PRIMARY KEY (Sponsor_ID)
+    PRIMARY KEY (Sponsor_ID),
+    FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
 );
+
 CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
 (
     Sponsor_ID INT,
@@ -261,7 +265,6 @@ CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
     PRIMARY KEY (Sponsor_ID, Contract_Details),
     FOREIGN KEY (Sponsor_ID) REFERENCES [SPONSOR](Sponsor_ID)
 );
-
 
 /* Relational Tables TABLES */
 
