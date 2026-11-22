@@ -3,10 +3,8 @@
 USE compeition_team_manager;
 GO
 
--- Test inputs for SSMS (matched to VARCHAR(50) in [User])
-DECLARE @Username VARCHAR(50) = 'Guardiansof_Galaxy';
-DECLARE @Password VARCHAR(50) = 'myPassword123';
-DECLARE @UserID   INT         = 1;
+
+
 
 -- 1.1 SELECT: Verify active user credentials ([User])
 SELECT UserID, Username, First_Name, Last_Name, Password_
@@ -275,20 +273,93 @@ WHERE L.Member_ID = @UserID;
 
 
 
--- ============================================================
+-- Test inputs for ADMIN PAGE
+DECLARE @UserID           INT          = 10;
+DECLARE @Username         VARCHAR(50)  = 'new_member01';
+DECLARE @First_Name       VARCHAR(50)  = 'Sara';
+DECLARE @Last_Name        VARCHAR(50)  = 'Ahmed';
+DECLARE @Password         VARCHAR(50)  = 'tempPass123';
+DECLARE @IsActive         BIT          = 1;
+DECLARE @Enrollment_Year  INT          = 2024;
+DECLARE @Email            VARCHAR(100) = 'sara.ahmed@example.com';
+DECLARE @Major            VARCHAR(50)  = 'Mechatronics';
+DECLARE @Join_Day         INT          = 22;
+DECLARE @Join_Month       INT          = 11;
+DECLARE @Join_Year        INT          = 2026;
+DECLARE @Appointment_Date DATE         = '2026-11-22';
+DECLARE @Leave_Date       DATE         = '2026-11-22';
+
+DECLARE @Project_ID       INT          = 1;
+DECLARE @timeLine_ID      INT          = 1;
+DECLARE @Achievement_ID   INT          = 1;
+DECLARE @IsVisible        BIT          = 1;
+
 -- PAGE 10: ADMIN USER & VISIBILITY MANAGEMENT
--- ============================================================
+-- 10.1 INSERT: Register a new user ([User]) and assign disjoint role (ADMIN or MEMBER)
 
--- 10.1 INSERT: Register a new user ([USER]) and assign disjoint role (ADMIN or MEMBER)
+-- Admin inserts the account of the new user
+INSERT INTO [User] (
+    UserID, Username, First_Name, Last_Name, Password_,
+    IsActive, Enrollment_Year, Email, Major,
+    Join_Day, Join_Month, Join_Year
+)
+VALUES (
+    @UserID, @Username, @First_Name, @Last_Name, @Password,
+    @IsActive, @Enrollment_Year, @Email, @Major,
+    @Join_Day, @Join_Month, @Join_Year
+);
+
+-- Run if new user is a admin
+INSERT INTO [ADMIN] (UserID, Appointment_Date, Admin_Leave_Date)
+VALUES (@UserID, @Appointment_Date, NULL);
+
+-- Run if new user is a member
+INSERT INTO [MEMBER] (UserID, Team_Join_Day, Team_Join_Month, Team_Join_Year, Leave_Date)
+VALUES (@UserID, @Join_Day, @Join_Month, @Join_Year, NULL);
 
 
+-- Admin Edits user profile details
+UPDATE [User]
+SET First_Name      = @First_Name,
+    Last_Name       = @Last_Name,
+    Email           = @Email,
+    Major           = @Major,
+    Enrollment_Year = @Enrollment_Year
+WHERE UserID = @UserID;
 
--- 10.2 UPDATE: Edit user profile, deactivate account (IsActive = 0), or set Admin_Leave_Date / Leave_Date
+-- Deactivate user account
+UPDATE [User]
+SET IsActive = 0
+WHERE UserID = @UserID;
 
+-- Record leave date if user is an ADMIN
+UPDATE [ADMIN]
+SET Admin_Leave_Date = @Leave_Date
+WHERE UserID = @UserID;
 
+-- Record leave date if user is a MEMBER
+UPDATE [MEMBER]
+SET Leave_Date = @Leave_Date
+WHERE UserID = @UserID;
 
--- 10.3 DELETE: Delete subtype record (ADMIN or MEMBER) and user ([USER])
-
+-- Deleting the admin or member type user
+DELETE FROM [ADMIN]  WHERE UserID = @UserID;
+DELETE FROM [MEMBER] WHERE UserID = @UserID;
+DELETE FROM [User]   WHERE UserID = @UserID;
 
 
 -- 10.4 UPDATE: Toggle visibility flags (Project_IsVisible, TIMELINE.isVisible, ACHIEVEMENT.IsVisible)
+-- Toggle Project visibility for Guests
+UPDATE PROJECT
+SET Project_IsVisible = @IsVisible
+WHERE Project_ID = @Project_ID;
+
+-- Toggle Timeline visibility for Guests
+UPDATE TIMELINE
+SET isVisible = @IsVisible
+WHERE timeLine_ID = @timeLine_ID;
+
+-- Toggle Achievement visibility for Guests (spelled IsVisable in your sheet; change to IsVisible if renamed in DDL)
+UPDATE ACHIEVEMENT
+SET IsVisable = @IsVisible
+WHERE Achievement_ID = @Achievement_ID;

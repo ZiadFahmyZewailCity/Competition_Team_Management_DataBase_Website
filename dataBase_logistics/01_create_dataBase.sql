@@ -200,24 +200,27 @@ CREATE TABLE [FEEDBACK]
     Comment VARCHAR(MAX),
     Rating INT,
     feedback_date DATE,
+    UserID INT,
+    Document_ID INT,
 
-    PRIMARY KEY (Feedback_ID)
+    PRIMARY KEY (Feedback_ID),
+    FOREIGN KEY (UserID)      REFERENCES [MEMBER](UserID),
+    FOREIGN KEY (Document_ID) REFERENCES [DOCUMENT](Document_ID)
 );
-
 
 /* Assistance_Request table */
 CREATE TABLE [ASSISTANCE_REQUEST]
 (
+  
     Request_ID INT,
     Status VARCHAR(100),
     feedback_date DATE,
     Description VARCHAR(MAX),
-    Title VARCHAR(500),
-    Response VARCHAR(MAX),
-    Response_Date DATE,
-
-    PRIMARY KEY (Request_ID)
+    UserID INT,
+    PRIMARY KEY (Request_ID),
+    FOREIGN KEY (UserID) REFERENCES [MEMBER](UserID)
 );
+
 
 /* Achievement table */
 CREATE TABLE [ACHIEVEMENT]
@@ -240,14 +243,16 @@ CREATE TABLE [SPONSOR]
 (
     Sponsor_ID INT,
     Sponsor_Name VARCHAR(255),
-    Sponsor_Logo VARCHAR(500),
     Sponsor_Type VARCHAR(100),
+    Sponsor_Logo VARCHAR(500),
     Email VARCHAR(255),
     Phone VARCHAR(20),
+    Sponsor_Description VARCHAR(MAX),
+    Team_ID INT,
 
-    PRIMARY KEY (Sponsor_ID)
+    PRIMARY KEY (Sponsor_ID),
+    FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
 );
-
 CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
 (
     Sponsor_ID INT,
@@ -261,7 +266,13 @@ CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
 /* Relational Tables TABLES */
 
 /* SUBTEAM_WORKS_ON_PROJECT */
-
+CREATE TABLE SUBTEAM_WORKS_ON_PROJECT (
+    Subteam_ID INT NOT NULL,
+    Project_ID INT NOT NULL,
+    PRIMARY KEY (Subteam_ID, Project_ID),
+    FOREIGN KEY (Subteam_ID) REFERENCES SUBTEAM(Subteam_ID),
+    FOREIGN KEY (Project_ID) REFERENCES PROJECT(Project_ID)
+);
 /* BELONGS_TO */
 CREATE TABLE [PROJECT_DOCUMENT]
 (
@@ -278,14 +289,35 @@ CREATE TABLE [PROJECT_DOCUMENT]
 );
 
 /* MEMBER_WORKS_ON_TASK */
+CREATE TABLE MEMBER_WORKS_ON_TASK (
+    Member_ID INT NOT NULL,
+    Task_ID   INT NOT NULL,
+    PRIMARY KEY (Member_ID, Task_ID),
+    FOREIGN KEY (Member_ID) REFERENCES MEMBER(UserID),
+    FOREIGN KEY (Task_ID)   REFERENCES TASK(Task_ID)
+);
 
 /* SPONSOR_CONTRIBUTION */
 
 /* LEADS_SUBTEAM */
+CREATE TABLE LEADS_SUBTEAM (
+    Subteam_ID INT NOT NULL,
+    Member_ID  INT NOT NULL,
+    PRIMARY KEY (Subteam_ID, Member_ID),
+    FOREIGN KEY (Subteam_ID) REFERENCES SUBTEAM(Subteam_ID),
+    FOREIGN KEY (Member_ID)  REFERENCES MEMBER(UserID)
+);
 
 /* ATTACHED_TO */
 
 /* TASK_DOCUMENT */
+CREATE TABLE TASK_DOCUMENT (
+    Task_ID     INT NOT NULL,
+    Document_ID INT NOT NULL,
+    PRIMARY KEY (Task_ID, Document_ID),
+    FOREIGN KEY (Task_ID)     REFERENCES TASK(Task_ID),
+    FOREIGN KEY (Document_ID) REFERENCES DOCUMENT(Document_ID)
+    );
 
 /* MILESTONE_PROJECT */
 
