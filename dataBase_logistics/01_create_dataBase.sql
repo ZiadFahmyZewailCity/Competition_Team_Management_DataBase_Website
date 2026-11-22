@@ -1,5 +1,5 @@
 /* Create Data Base */
-
+CREATE DATABASE compeition_team_manager
 
 /* MAIN TABLES */
 
