@@ -1,5 +1,9 @@
 /* Create Data Base */
-CREATE DATABASE compeition_team_manager
+CREATE DATABASE competition_team_manager;
+GO
+USE competition_team_manager;
+GO
+
 
 /* MAIN TABLES */
 
@@ -211,16 +215,13 @@ CREATE TABLE [FEEDBACK]
 /* Assistance_Request table */
 CREATE TABLE [ASSISTANCE_REQUEST]
 (
-  
     Request_ID INT,
-
     Title VARCHAR(500),
-    Description VARCHAR(MAX),
-    Assistance_Request_date Date,
     Status VARCHAR(100),
     feedback_date DATE,
     Description VARCHAR(MAX),
     UserID INT,
+
     PRIMARY KEY (Request_ID),
     FOREIGN KEY (UserID) REFERENCES [MEMBER](UserID)
 );
@@ -230,11 +231,15 @@ CREATE TABLE [ASSISTANCE_REQUEST]
 CREATE TABLE [ACHIEVEMENT]
 (
     Achievement_ID INT,
+    Category VARCHAR (255),
+    Rank VARCHAR(255),
     Title VARCHAR(500),
     Description VARCHAR(MAX),
+
     Achievement_date DATE,
     IsVisible BIT DEFAULT 1,
     Team_ID INT,
+
     PRIMARY KEY (Achievement_ID),
     FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
 
@@ -242,7 +247,6 @@ CREATE TABLE [ACHIEVEMENT]
 
 
 /* Sponsor table */
-
 CREATE TABLE [SPONSOR]
 (
     Sponsor_ID INT,
@@ -257,10 +261,12 @@ CREATE TABLE [SPONSOR]
     PRIMARY KEY (Sponsor_ID),
     FOREIGN KEY (Team_ID) REFERENCES [TEAM](Team_ID)
 );
-CREATE TABLE [SPONSOR_CONTRACT_DETAILS]
+
+/* SPONSOR_CONTRIBUTION */
+CREATE TABLE [SPONSOR_CONTRIBUTION]
 (
     Sponsor_ID INT,
-    Contract_Details VARCHAR(MAX),
+    Contract_Details VARCHAR(255),
 
     PRIMARY KEY (Sponsor_ID, Contract_Details),
     FOREIGN KEY (Sponsor_ID) REFERENCES [SPONSOR](Sponsor_ID)
@@ -277,19 +283,26 @@ CREATE TABLE SUBTEAM_WORKS_ON_PROJECT (
     FOREIGN KEY (Subteam_ID) REFERENCES SUBTEAM(Subteam_ID),
     FOREIGN KEY (Project_ID) REFERENCES PROJECT(Project_ID)
 );
+
 /* BELONGS_TO */
-CREATE TABLE [PROJECT_DOCUMENT]
-(
-    Project_ID INT,
-    Document_ID INT,
+CREATE TABLE [BELONGS_TO] (
+    Subteam_ID INT NOT NULL,
+    Member_ID  INT NOT NULL,
+    PRIMARY KEY (Subteam_ID, Member_ID),
+    FOREIGN KEY (Subteam_ID) REFERENCES [SUBTEAM](Subteam_ID),
+    FOREIGN KEY (Member_ID)  REFERENCES [MEMBER](UserID)
+);
 
+
+/* ATTACHED_TO */
+CREATE TABLE [ATTACHED_TO] (
+
+    Project_ID  INT NOT NULL,
+    Document_ID INT NOT NULL,
     PRIMARY KEY (Project_ID, Document_ID),
+    FOREIGN KEY (Project_ID)  REFERENCES [PROJECT](Project_ID),
+    FOREIGN KEY (Document_ID) REFERENCES [DOCUMENT](Document_ID)
 
-    FOREIGN KEY (Project_ID)
-        REFERENCES [PROJECT](ProjectID),
-
-    FOREIGN KEY (Document_ID)
-        REFERENCES [DOCUMENT](DocumentID)
 );
 
 /* MEMBER_WORKS_ON_TASK */
@@ -301,11 +314,6 @@ CREATE TABLE MEMBER_WORKS_ON_TASK (
     FOREIGN KEY (Task_ID)   REFERENCES TASK(Task_ID)
 );
 
-/* SPONSOR_CONTRIBUTION */
-
-
-
-
 /* LEADS_SUBTEAM */
 CREATE TABLE LEADS_SUBTEAM (
     Subteam_ID INT NOT NULL,
@@ -314,11 +322,6 @@ CREATE TABLE LEADS_SUBTEAM (
     FOREIGN KEY (Subteam_ID) REFERENCES SUBTEAM(Subteam_ID),
     FOREIGN KEY (Member_ID)  REFERENCES MEMBER(UserID)
 );
-
-/* ATTACHED_TO */
-
-
-
 
 
 /* TASK_DOCUMENT */
@@ -331,9 +334,37 @@ CREATE TABLE TASK_DOCUMENT (
     );
 
 /* MILESTONE_PROJECT */
+CREATE TABLE [MILESTONE_PROJECT] (
+    mileStone_ID INT NOT NULL,
+    Project_ID   INT NOT NULL,
+    PRIMARY KEY (mileStone_ID, Project_ID),
+    FOREIGN KEY (mileStone_ID) REFERENCES [MILESTONE](mileStone_ID),
+    FOREIGN KEY (Project_ID)   REFERENCES [PROJECT](Project_ID)
+);
 
 /* TIMELINE_EVENT */
+CREATE TABLE [TIMELINE_EVENT] (
+    timeLine_ID INT NOT NULL,
+    Event_ID    INT NOT NULL,
+    PRIMARY KEY (timeLine_ID, Event_ID),
+    FOREIGN KEY (timeLine_ID) REFERENCES [TIMELINE](timeLine_ID),
+    FOREIGN KEY (Event_ID)    REFERENCES [EVENT](Event_ID)
+);
 
 /* TIMELINE_MILESTONE */
+CREATE TABLE [TIMELINE_MILESTONE] (
+    timeLine_ID  INT NOT NULL,
+    mileStone_ID INT NOT NULL,
+    PRIMARY KEY (timeLine_ID, mileStone_ID),
+    FOREIGN KEY (timeLine_ID)  REFERENCES [TIMELINE](timeLine_ID),
+    FOREIGN KEY (mileStone_ID) REFERENCES [MILESTONE](mileStone_ID)
+);
 
 /* SUBTEAM_ASSOCIATED_TO_DISCUSSION_PAGE */
+CREATE TABLE [SUBTEAM_ASSOCIATED_TO_DISCUSSION_PAGE] (
+    Subteam_ID INT NOT NULL,
+    page_ID    INT NOT NULL,
+    PRIMARY KEY (Subteam_ID, page_ID),
+    FOREIGN KEY (Subteam_ID) REFERENCES [SUBTEAM](Subteam_ID),
+    FOREIGN KEY (page_ID)    REFERENCES [DISCUSSION_PAGE](page_ID)
+);
