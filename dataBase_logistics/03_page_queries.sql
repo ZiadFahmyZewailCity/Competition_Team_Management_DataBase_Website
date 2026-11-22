@@ -224,25 +224,130 @@ WHERE L.Member_ID = @UserID;
 -- ============================================================
 -- PAGE 8: ACHIEVEMENTS, SPONSORS & GALLERY
 -- ============================================================
+-- ============================================================
+-- PAGE 8: ACHIEVEMENTS, SPONSORS & GALLERY
+-- ============================================================
+
+-- Test inputs for PAGE 8
+DECLARE @Achievement_ID         INT           = 1;
+DECLARE @Ach_Title              VARCHAR(500)  = 'ACM Regional Contest';
+DECLARE @Ach_Category           VARCHAR(100)  = 'Programming';
+DECLARE @Ach_Rank               VARCHAR(100)  = 'Gold';
+DECLARE @Ach_Description        VARCHAR(MAX)  = 'Won first place in the regional contest';
+DECLARE @Ach_Day                INT           = 15;
+DECLARE @Ach_Month              INT           = 3;
+DECLARE @Ach_Year               INT           = 2026;
+DECLARE @IsVisible              BIT           = 1;
+DECLARE @Team_ID                INT           = 1;
+
+DECLARE @Sponsor_ID             INT           = 1;
+DECLARE @Sponsor_Name           VARCHAR(255)  = 'TechCorp';
+DECLARE @Sponsor_Type           VARCHAR(100)  = 'Gold';
+DECLARE @Sponsor_Logo           VARCHAR(500)  = 'logos/techcorp.png';
+DECLARE @Sponsor_Email          VARCHAR(255)  = 'info@techcorp.com';
+DECLARE @Sponsor_Phone          VARCHAR(20)   = '01000000000';
+DECLARE @Sponsor_Description    VARCHAR(MAX)  = 'Main technology sponsor';
+DECLARE @Contract_Details       VARCHAR(MAX)  = 'Provides 50,000 EGP yearly funding';
+DECLARE @New_Contract_Details   VARCHAR(MAX)  = 'Provides 75,000 EGP yearly funding';
+
 
 -- 8.1 SELECT: Load public achievements (ACHIEVEMENT)
-
+SELECT Achievement_ID, Title, Category, Achievement_Rank, Description,
+       Achievement_Date_Day, Achievement_Date_Month, Achievement_Date_Year
+FROM [ACHIEVEMENT]
+WHERE IsVisible = 1
+ORDER BY Achievement_Date_Year DESC,
+         Achievement_Date_Month DESC,
+         Achievement_Date_Day DESC;
 
 
 -- 8.2 INSERT / UPDATE / DELETE: Manage achievements (Admin)
 
+-- Admin adds an achievement
+INSERT INTO [ACHIEVEMENT]
+    (Achievement_ID, Title, Category, Achievement_Rank, Description,
+     Achievement_Date_Day, Achievement_Date_Month, Achievement_Date_Year,
+     IsVisible, Team_ID)
+VALUES
+    (@Achievement_ID, @Ach_Title, @Ach_Category, @Ach_Rank, @Ach_Description,
+     @Ach_Day, @Ach_Month, @Ach_Year,
+     @IsVisible, @Team_ID);
+
+-- Admin edits an achievement
+UPDATE [ACHIEVEMENT]
+SET Title                  = @Ach_Title,
+    Category               = @Ach_Category,
+    Achievement_Rank       = @Ach_Rank,
+    Description            = @Ach_Description,
+    Achievement_Date_Day   = @Ach_Day,
+    Achievement_Date_Month = @Ach_Month,
+    Achievement_Date_Year  = @Ach_Year,
+    IsVisible              = @IsVisible
+WHERE Achievement_ID = @Achievement_ID;
+
+-- Admin deletes an achievement
+DELETE FROM [ACHIEVEMENT]
+WHERE Achievement_ID = @Achievement_ID;
 
 
--- 8.3 SELECT: Load sponsors and contribution details (SPONSOR + SPONSOR_CONTRIBUTION if used)
-
+-- 8.3 SELECT: Load sponsors and contribution details (SPONSOR + SPONSOR_CONTRACT_DETAILS)
+SELECT S.Sponsor_ID, S.Sponsor_Name, S.Sponsor_Logo, S.Sponsor_Type,
+       S.Email, S.Phone, S.Sponsor_Description,
+       C.Contract_Details
+FROM [SPONSOR] S
+LEFT JOIN [SPONSOR_CONTRACT_DETAILS] C
+    ON C.Sponsor_ID = S.Sponsor_ID
+ORDER BY S.Sponsor_Name;
 
 
 -- 8.4 INSERT / UPDATE / DELETE: Manage sponsors & contributions (Admin)
 
+-- Admin adds a sponsor
+INSERT INTO [SPONSOR]
+    (Sponsor_ID, Sponsor_Name, Sponsor_Type, Sponsor_Logo,
+     Email, Phone, Sponsor_Description, Team_ID)
+VALUES
+    (@Sponsor_ID, @Sponsor_Name, @Sponsor_Type, @Sponsor_Logo,
+     @Sponsor_Email, @Sponsor_Phone, @Sponsor_Description, @Team_ID);
+
+-- Admin adds a contribution/contract detail
+INSERT INTO [SPONSOR_CONTRACT_DETAILS] (Sponsor_ID, Contract_Details)
+VALUES (@Sponsor_ID, @Contract_Details);
+
+-- Admin edits a sponsor
+UPDATE [SPONSOR]
+SET Sponsor_Name        = @Sponsor_Name,
+    Sponsor_Type        = @Sponsor_Type,
+    Sponsor_Logo        = @Sponsor_Logo,
+    Email               = @Sponsor_Email,
+    Phone               = @Sponsor_Phone,
+    Sponsor_Description = @Sponsor_Description
+WHERE Sponsor_ID = @Sponsor_ID;
+
+-- Admin edits a contract detail (part of the PK, so match on the old value)
+UPDATE [SPONSOR_CONTRACT_DETAILS]
+SET Contract_Details = @New_Contract_Details
+WHERE Sponsor_ID = @Sponsor_ID
+  AND Contract_Details = @Contract_Details;
+
+-- Admin deletes one contract detail
+DELETE FROM [SPONSOR_CONTRACT_DETAILS]
+WHERE Sponsor_ID = @Sponsor_ID
+  AND Contract_Details = @New_Contract_Details;
+
+-- Admin deletes a sponsor (delete its contract details FIRST because of the FK)
+DELETE FROM [SPONSOR_CONTRACT_DETAILS] WHERE Sponsor_ID = @Sponsor_ID;
+DELETE FROM [SPONSOR] WHERE Sponsor_ID = @Sponsor_ID;
 
 
 -- 8.5 SELECT: Load gallery photos (DOCUMENT where Document_Type = 'Gallery')
-
+SELECT Document_ID, Document_Filename, Document_FilePath, Document_Fileformat,
+       D_Upload_Date_Day, D_Upload_Date_Month, D_Upload_Date_Year
+FROM [DOCUMENT]
+WHERE Document_Type = 'Gallery'
+ORDER BY D_Upload_Date_Year DESC,
+         D_Upload_Date_Month DESC,
+         D_Upload_Date_Day DESC;
 
 
 -- ============================================================
